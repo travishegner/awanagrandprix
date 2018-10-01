@@ -8,7 +8,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//go:generate go-bindata -prefix "pub/" -pkg dashboard -o assets.go pub/...
+//go:generate go-bindata -debug -prefix "pub/" -pkg dashboard -o assets.go pub/...
 
 type Dashboard struct{}
 
