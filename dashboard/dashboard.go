@@ -3,6 +3,7 @@ package dashboard
 import (
 	"mime"
 	"net/http"
+	"net/http/httputil"
 	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
@@ -24,13 +25,14 @@ func (db *Dashboard) Start() error {
 }
 
 func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
-	url := r.URL.Path[1:]
+	url := r.URL.Path
+	if url[len(url)-1:] == "/" {
+		url = url[1:] + "index.html"
+	}
+
+	w.Write([]byte(url))
 	l := log.WithField("url", url)
 	l.Debug("dashboard request")
-
-	if url == "" {
-		url = "index.html"
-	}
 
 	a, err := Asset(url)
 	if err != nil {
