@@ -8,6 +8,8 @@ import (
 func main() {
 	//TODO check database file exists
 
+	log.SetLevel(log.DebugLevel)
+
 	db, err := dashboard.NewDashboard()
 	if err != nil {
 		log.WithError(err).Fatal("Failed to create dashboard")

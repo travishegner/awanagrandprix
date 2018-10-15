@@ -3,7 +3,7 @@ package dashboard
 import (
 	"mime"
 	"net/http"
-	"net/http/httputil"
+	//	"net/http/httputil"
 	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
@@ -25,12 +25,11 @@ func (db *Dashboard) Start() error {
 }
 
 func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
-	url := r.URL.Path
-	if url[len(url)-1:] == "/" {
-		url = url[1:] + "index.html"
+	url := r.URL.Path[1:]
+	if len(url) == 0 || url[len(url)-1:] == "/" {
+		url = url + "index.html"
 	}
 
-	w.Write([]byte(url))
 	l := log.WithField("url", url)
 	l.Debug("dashboard request")
 
@@ -48,6 +47,7 @@ func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type", mime.TypeByExtension(filepath.Ext(f.Name())))
+	l.WithField("ct", w.Header().Get("Content-Type")).Debug("content-type")
 	var b int
 	b, err = w.Write(a)
 	if err != nil {

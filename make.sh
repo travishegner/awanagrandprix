@@ -7,8 +7,8 @@ if [ -e agp.db ]; then
 	sqlite3 agp.db .schema > agp_sample.db
 fi
 
-echo "Linting..."
-gometalinter -e dashboard/assets.go
+#echo "Linting..."
+#gometalinter -e dashboard/assets.go
 
 echo "Embedding assets..."
 go generate dashboard/dashboard.go
