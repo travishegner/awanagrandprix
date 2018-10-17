@@ -3,8 +3,9 @@ package dashboard
 import (
 	"mime"
 	"net/http"
-	//	"net/http/httputil"
 	"path/filepath"
+
+	//	"net/http/httputil"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -26,6 +27,12 @@ func (db *Dashboard) Start() error {
 
 func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Path[1:]
+
+	if len(url) >= 4 && url[:3] == "api" {
+		go handleApi(w, r)
+		return
+	}
+
 	if len(url) == 0 || url[len(url)-1:] == "/" {
 		url = url + "index.html"
 	}
@@ -41,7 +48,7 @@ func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 	}
 	f, err := AssetInfo(url)
 	if err != nil {
-		http.NotFound(w, r)
+		http.Error(w, "failed to load asset info", 500)
 		l.Error("failed to load asset info")
 		return
 	}
