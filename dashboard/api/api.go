@@ -7,14 +7,32 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func handleApi(w http.ResponseWriter, r *http.Request) {
+var (
+	dbfile = "agp.db"
+)
+
+func HandleApi(w http.ResponseWriter, r *http.Request) {
 	l := log.WithField("method", r.Method).WithField("url", r.URL)
 	comps := strings.Split(r.URL.Path, "/")
 	switch r.Method {
 	case http.MethodGet:
-		switch comps[1] {
+		l.Debug(comps[2])
+		switch comps[2] {
 		case "seasons":
-
+			s, err := GetSeasons()
+			if err != nil {
+				http.Error(w, "Error getting seasons", 500)
+				l.Error("Error getting seasons")
+				return
+			}
+			b, err := w.Write(s)
+			if err != nil {
+				http.Error(w, "Error writing output", 500)
+				l.WithError(err).Error("Error writing output")
+				return
+			}
+			l.WithField("bytes", b).Debug("Wrote data")
+			return
 		default:
 			http.NotFound(w, r)
 			l.Error("Not Found")

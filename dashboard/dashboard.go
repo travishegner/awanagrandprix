@@ -5,9 +5,8 @@ import (
 	"net/http"
 	"path/filepath"
 
-	//	"net/http/httputil"
-
 	log "github.com/sirupsen/logrus"
+	"github.com/travishegner/awanagrandprix/dashboard/api"
 )
 
 //go:generate go-bindata -debug -prefix "pub/" -pkg dashboard -o assets.go pub/...
@@ -29,7 +28,7 @@ func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 	url := r.URL.Path[1:]
 
 	if len(url) >= 4 && url[:3] == "api" {
-		go handleApi(w, r)
+		go api.HandleApi(w, r)
 		return
 	}
 
