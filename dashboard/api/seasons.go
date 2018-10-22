@@ -9,7 +9,7 @@ import (
 )
 
 type Season struct {
-	Name string `json:name`
+	Name string `json:"name"`
 }
 
 func GetSeasons() ([]byte, error) {

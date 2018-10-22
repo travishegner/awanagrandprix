@@ -25,10 +25,24 @@ func (db *Dashboard) Start() error {
 }
 
 func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
+	l := log.WithField("url", r.URL.Path)
 	url := r.URL.Path[1:]
 
 	if len(url) >= 4 && url[:3] == "api" {
-		go api.HandleApi(w, r)
+		j, err := api.HandleApi(r)
+		if err != nil {
+			http.Error(w, "failed to retreive data from api", 500)
+			l.Error("failed to retreive data from api")
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		b, err := w.Write(j)
+		if err != nil {
+			http.Error(w, "failed to write json from api", 500)
+			l.Error("failed to write json from api")
+		}
+		l.WithField("bytes", b).Debug("bytes written")
 		return
 	}
 
@@ -36,7 +50,6 @@ func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 		url = url + "index.html"
 	}
 
-	l := log.WithField("url", url)
 	l.Debug("dashboard request")
 
 	a, err := Asset(url)
