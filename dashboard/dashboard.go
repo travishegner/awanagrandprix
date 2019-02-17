@@ -1,12 +1,14 @@
 package dashboard
 
 import (
+	"database/sql"
+	"html/template"
 	"mime"
 	"net/http"
 	"path/filepath"
 
+	_ "github.com/mattn/go-sqlite3"
 	log "github.com/sirupsen/logrus"
-	"github.com/travishegner/awanagrandprix/dashboard/api"
 )
 
 var (
@@ -16,52 +18,41 @@ var (
 //go:generate go-bindata -debug -prefix "pub/" -pkg dashboard -o assets.go pub/...
 
 type Dashboard struct {
-	a *api.Api
+	db *sql.DB
 }
 
 func NewDashboard() (*Dashboard, error) {
-	api, err := api.NewApi(dbfile)
+	db, err := sql.Open("sqlite3", dbfile)
 	if err != nil {
-		log.Error("Failed to create Api object.")
+		log.WithField("dbfile", dbfile).Error("Failed to open database.")
 		return nil, err
 	}
-	return &Dashboard{a: api}, nil
+	return &Dashboard{db: db}, nil
 }
 
-func (d *Dashboard) Start() error {
-	http.HandleFunc("/", d.handlePage)
+func (dash *Dashboard) Start() error {
+	http.HandleFunc("/", dash.handlePage)
 	http.ListenAndServe(":8080", nil)
 
 	return nil
 }
 
-func (d *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
+func (dash *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 	l := log.WithField("url", r.URL.Path)
 	url := r.URL.Path[1:]
 
-	if len(url) >= 4 && url[:3] == "api" {
-		j, err := d.a.Handle(r)
-		if err != nil {
-			http.Error(w, "failed to retreive data from api", 500)
-			l.Error("failed to retreive data from api")
-			return
-		}
+	w.Header().Set("Content-Type", "text/html")
 
-		w.Header().Set("Content-Type", "application/json")
-		b, err := w.Write(j)
-		if err != nil {
-			http.Error(w, "failed to write json from api", 500)
-			l.Error("failed to write json from api")
-		}
-		l.WithField("bytes", b).Debug("bytes written")
+	//base, _ := Asset("tpl/base.html")
+	switch url {
+	case "":
+		tpl, _ := template.New("").ParseFiles("dashboard/pub/tpl/seasons.html", "dashboard/pub/tpl/base.html")
+		data, _ := dash.GetSeasons()
+		tpl.ExecuteTemplate(w, "base", data)
+		return
+	case "season":
 		return
 	}
-
-	if len(url) == 0 || url[len(url)-1:] == "/" {
-		url = url + "index.html"
-	}
-
-	l.Debug("dashboard request")
 
 	a, err := Asset(url)
 	if err != nil {
