@@ -9,27 +9,38 @@ import (
 	"github.com/travishegner/awanagrandprix/dashboard/api"
 )
 
+var (
+	dbfile = "agp.db"
+)
+
 //go:generate go-bindata -debug -prefix "pub/" -pkg dashboard -o assets.go pub/...
 
-type Dashboard struct{}
-
-func NewDashboard() (*Dashboard, error) {
-	return &Dashboard{}, nil
+type Dashboard struct {
+	a *api.Api
 }
 
-func (db *Dashboard) Start() error {
-	http.HandleFunc("/", db.handlePage)
+func NewDashboard() (*Dashboard, error) {
+	api, err := api.NewApi(dbfile)
+	if err != nil {
+		log.Error("Failed to create Api object.")
+		return nil, err
+	}
+	return &Dashboard{a: api}, nil
+}
+
+func (d *Dashboard) Start() error {
+	http.HandleFunc("/", d.handlePage)
 	http.ListenAndServe(":8080", nil)
 
 	return nil
 }
 
-func (db *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
+func (d *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 	l := log.WithField("url", r.URL.Path)
 	url := r.URL.Path[1:]
 
 	if len(url) >= 4 && url[:3] == "api" {
-		j, err := api.HandleApi(r)
+		j, err := d.a.Handle(r)
 		if err != nil {
 			http.Error(w, "failed to retreive data from api", 500)
 			l.Error("failed to retreive data from api")
