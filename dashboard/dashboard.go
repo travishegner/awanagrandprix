@@ -3,6 +3,7 @@ package dashboard
 import (
 	"database/sql"
 	"fmt"
+	"html/template"
 	"mime"
 	"net/http"
 	"path/filepath"
@@ -51,7 +52,7 @@ func (dash *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 	case "":
 		if r.Method == "POST" {
 			name := r.FormValue("seasonname")
-			id, err := dash.NewSeason(name)
+			id, err := dash.AddSeason(name)
 			if err != nil {
 				l.WithError(err).Error("Failed to create new season.")
 				http.Error(w, "failed to create new season", 500)
@@ -88,4 +89,21 @@ func (dash *Dashboard) handlePage(w http.ResponseWriter, r *http.Request) {
 		l.Error("error writing content")
 	}
 	l.WithField("bytes", b).Debug("bytes written")
+}
+
+func (dash *Dashboard) getTemplate(name string) (*template.Template, error) {
+	b, err := Asset("tpl/" + name + ".html")
+	if err != nil {
+		log.WithField("name", name).WithError(err).Error("Error getting template asset.")
+		return nil, err
+	}
+	tpl, err := template.New(name).Parse(string(b))
+	if err != nil {
+		log.WithField("name", name).WithError(err).Error("Error parsing template bytes.")
+		return nil, err
+	}
+	tpl.New("head").Parse(dash.head)
+	tpl.New("foot").Parse(dash.foot)
+
+	return tpl, nil
 }

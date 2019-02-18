@@ -5,19 +5,33 @@
 		<li class="breadcrumb-item active">Seasons</li>
 	</ol>
 </nav>
-<h3>Seasons</h3>
-<ul>
-	{{range .}}
-	<li><a href="season?id={{.Id}}">{{.Name}}</a></li>
-	{{end}}
-</ul>
-<form method="post" class="row">
-	<div class="col">
-		<input type="text" class="form-control" id="seasonname" name="seasonname" placeholder="Season Name">
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+			<h3>Seasons</h3>
+		</div>
 	</div>
-	<div class="col">
-		<button class="btn btn-primary">Create Season</button>
+	<div class="row">
+		<div class="col">
+			<ul>
+				{{range .}}
+				<li><a href="season?id={{.Id}}">{{.Name}}</a></li>
+				{{end}}
+			</ul>
+		</div>
 	</div>
-</form>
+	<div class="row">
+		<div class="col">
+			<form method="post" class="row">
+				<div class="col">
+					<input type="text" class="form-control" id="seasonname" name="seasonname" placeholder="Season Name">
+				</div>
+				<div class="col">
+					<button class="btn btn-primary">Create Season</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 {{template "foot"}}

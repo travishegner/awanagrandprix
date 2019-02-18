@@ -3,7 +3,8 @@
 <nav>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="/">Seasons</a></li>
-		<li class="breadcrumb-item active">{{.Name}}</li>
+		<li class="breadcrumb-item">{{.Name}}</li>
+		<li class="breadcrumb-item active">Leaderboard</li>
 	</ol>
 </nav>
 <div class="container-fluid">
@@ -16,28 +17,22 @@
 		<div class="col">
 			<ul class="nav nav-tabs">
 				<li class="nav-item active">
-					<a class="nav-link active" href="">Racers</a>
+					<a class="nav-link" href="season?id={{.Id}}">Racers</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="season?id={{.Id}}&tab=leaderboard">Leaderboard</a>
+					<a class="nav-link active" href="season?id={{.Id}}&tab=leaderboard">Leaderboard</a>
 				</li>
 			</ul>
 		</div>
 	</div>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col">
-				content
-			</div>
-			<div class="col-2 border">
-				<ul>
-					{{range .Classes}}
-					<li>{{.Name}}</li>
-					{{end}}
-				</ul>
-			</div>
 		</div>
 	</div>
 </div>
+
+<script>
+	setTimeout(function(){ location.reload(true); },2000);
+</script>
 
 {{template "foot"}}
