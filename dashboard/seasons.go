@@ -1,6 +1,7 @@
 package dashboard
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -9,7 +10,7 @@ import (
 )
 
 type Season struct {
-	Id   int
+	Id   int64
 	Name string
 }
 
@@ -57,28 +58,21 @@ func (dash *Dashboard) GetSeasons() ([]*Season, error) {
 }
 
 func (dash *Dashboard) GetSeason(id int64) (*Season, error) {
-	stmt, err := dash.db.Prepare("select id, name from seasons where id=?")
+	fmt.Println(id)
+	stmt, err := dash.db.Prepare("select name from seasons where id=?")
 	if err != nil {
 		log.WithError(err).Error("failed to prepare")
 		return nil, err
 	}
 
-	rows, err := stmt.Query(id)
+	var name string
+	err = stmt.QueryRow(id).Scan(&name)
 	if err != nil {
-		log.WithError(err).Error("failed to get season")
+		log.WithError(err).Error("failed to get season info")
 		return nil, err
 	}
 
-	season := &Season{}
-	for rows.Next() {
-		err = rows.Scan(&season.Id, &season.Name)
-		if err != nil {
-			log.WithError(err).Error("failed to get session info")
-			return nil, err
-		}
-	}
-
-	return season, nil
+	return &Season{Id: id, Name: name}, nil
 }
 
 func (dash *Dashboard) seasonsHandler(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +85,12 @@ func (dash *Dashboard) seasonsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (dash *Dashboard) seasonHandler(w http.ResponseWriter, r *http.Request) {
-	id, _ := strconv.ParseInt(r.FormValue("id"), 64, 0)
+	sid := r.FormValue("id")
+	id, err := strconv.ParseInt(sid, 10, 64)
+	if err != nil {
+		log.WithError(err).Errorf("failed to convert %v to int64", sid)
+		return
+	}
 	b, _ := Asset("tpl/season.html")
 	tpl, _ := template.New("season").Parse(string(b))
 	tpl.New("head").Parse(dash.head)
