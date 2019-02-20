@@ -4,7 +4,7 @@ set -e
 
 if [ -e agp.db ]; then
 	echo "Exporting db schema..."
-	sqlite3 agp.db .schema > agp_sample.schema
+	sqlite3 agp.db .schema | grep -v 'sqlite_sequence(name,seq);' > agp_sample.schema
 fi
 
 #echo "Linting..."
