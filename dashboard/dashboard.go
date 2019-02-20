@@ -31,12 +31,14 @@ func init() {
 type Dashboard struct {
 	head string
 	foot string
+	err  string
 }
 
 func NewDashboard() (*Dashboard, error) {
 	bHead, _ := Asset("tpl/head.html")
 	bFoot, _ := Asset("tpl/foot.html")
-	return &Dashboard{head: string(bHead), foot: string(bFoot)}, nil
+	bError, _ := Asset("tpl/error.html")
+	return &Dashboard{head: string(bHead), foot: string(bFoot), err: string(bError)}, nil
 }
 
 func (dash *Dashboard) Start() error {
@@ -97,6 +99,7 @@ func (dash *Dashboard) getTemplate(name string) (*template.Template, error) {
 	}
 	tpl.New("head").Parse(dash.head)
 	tpl.New("foot").Parse(dash.foot)
+	tpl.New("error").Parse(dash.err)
 
 	return tpl, nil
 }
@@ -130,6 +133,7 @@ func (dash *Dashboard) handleSeasons(w http.ResponseWriter, r *http.Request) {
 }
 
 func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
+	errs := []string{}
 	sid := r.FormValue("id")
 	if sid == "" {
 		http.Error(w, "missing id", 400)
@@ -155,9 +159,16 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 			if cName == "" {
 				break
 			}
-			s.AddClass(cName)
+			err = s.AddClass(cName)
+			if err != nil {
+				errs = append(errs, err.Error())
+			}
 		case "addcar":
 			sClassId := r.FormValue("classid")
+			carNumber := r.FormValue("carnumber")
+			if len(carNumber) > 3 {
+				carNumber = carNumber[:3]
+			}
 			carName := r.FormValue("carname")
 			sCarWeight := r.FormValue("carweight")
 			driver := r.FormValue("driver")
@@ -177,7 +188,10 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 				log.WithError(err).Error("failed to parse car weight")
 				break
 			}
-			s.AddCar(classId, carName, carWeight, driver)
+			err = s.AddCar(classId, carNumber, carName, carWeight, driver)
+			if err != nil {
+				errs = append(errs, err.Error())
+			}
 		}
 	}
 
@@ -196,5 +210,5 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tpl.Execute(w, s)
+	tpl.Execute(w, &page{Errors: errs, Data: s})
 }

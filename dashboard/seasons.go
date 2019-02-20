@@ -117,7 +117,7 @@ func (s *Season) LoadClasses() error {
 	return nil
 }
 
-func (s *Season) AddCar(classId int64, name string, weight float64, driver string) error {
+func (s *Season) AddCar(classId int64, number string, name string, weight float64, driver string) error {
 	//make sure we've got all the cars from the db
 	if len(s.Cars) == 0 {
 		s.LoadCars()
@@ -130,20 +130,21 @@ func (s *Season) AddCar(classId int64, name string, weight float64, driver strin
 	}
 
 	//populate a map with car numbers already in use
-	usedNums := map[int64]struct{}{}
+	usedNums := map[string]struct{}{}
 	for _, c := range s.Cars {
 		usedNums[c.Number] = struct{}{}
 	}
 
-	//generate a new random car number
-	number := int64(0)
-	for {
-		number = int64(rand.Intn(98) + 1)
-		if _, ok := usedNums[number]; ok {
-			number = 0
-		}
-		if number > 0 {
-			break
+	if number == "" {
+		//generate a new random car number
+		for {
+			number = fmt.Sprintf("%v", rand.Intn(98)+1)
+			if _, ok := usedNums[number]; ok {
+				number = ""
+			}
+			if number != "" {
+				break
+			}
 		}
 	}
 
@@ -178,7 +179,7 @@ func (s *Season) LoadCars() error {
 
 	for rows.Next() {
 		var id int64
-		var number int64
+		var number string
 		var name string
 		var weight float64
 		var driver string
