@@ -145,7 +145,7 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, err := GetSeason(id)
+	s, err := FetchSeason(id)
 	if err != nil {
 		log.WithError(err).Error("failed to get season")
 		http.Error(w, "failed to get season", 500)
@@ -159,7 +159,7 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 			if cName == "" {
 				break
 			}
-			err = s.AddClass(cName)
+			err = AddClass(s.Id, cName)
 			if err != nil {
 				errs = append(errs, err.Error())
 			}
@@ -173,7 +173,7 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 			sCarWeight := r.FormValue("carweight")
 			driver := r.FormValue("driver")
 
-			if sClassId == "" || carName == "" || sCarWeight == "" || driver == "" {
+			if sClassId == "" || sCarWeight == "" || driver == "" {
 				break
 			}
 
@@ -188,7 +188,7 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 				log.WithError(err).Error("failed to parse car weight")
 				break
 			}
-			err = s.AddCar(classId, carNumber, carName, carWeight, driver)
+			err = AddCar(s.Id, classId, carNumber, carName, carWeight, driver)
 			if err != nil {
 				errs = append(errs, err.Error())
 			}
@@ -198,9 +198,7 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 	tname := r.FormValue("tab")
 
 	if tname == "" {
-		tname = "season"
-		s.LoadClasses()
-		s.LoadCars()
+		tname = "cars"
 	}
 
 	tpl, err := dash.getTemplate(tname)
@@ -210,5 +208,16 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tpl.Execute(w, &page{Errors: errs, Data: s})
+	sp, err := NewSeasonPage(errs, s, tname)
+	if err != nil {
+		log.WithError(err).Error("failed to generate season page")
+		http.Error(w, "failed to generate season page", 500)
+		return
+	}
+
+	err = tpl.Execute(w, sp)
+	if err != nil {
+		http.Error(w, "failed to execute template", 500)
+		return
+	}
 }

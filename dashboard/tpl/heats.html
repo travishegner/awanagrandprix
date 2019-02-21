@@ -27,12 +27,15 @@
 	</div>
 	<div class="container-fluid">
 		<div class="row">
+			<div class="col">
+				{{if not .Season.Runs}}
+						<form class="form-inline" method="post">
+							<input type="hidden" name="action" value="generateheats">
+							<button class="btn btn-sm btn-primary ml-2">Generate Heats!</button>
+						</form>
+				{{end}}
+			</div>
 		</div>
 	</div>
 </div>
-
-<script>
-	setTimeout(function(){ location.reload(true); },5000);
-</script>
-
 {{template "foot"}}

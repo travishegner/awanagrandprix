@@ -19,6 +19,5 @@ CREATE TABLE IF NOT EXISTS "cars" (
 	"name"	TEXT NOT NULL UNIQUE,
 	"weight"	REAL NOT NULL CHECK(weight<=5.0),
 	"driver"	TEXT NOT NULL,
-	FOREIGN KEY("season_id") REFERENCES "seasons"("id") on update cascade on delete cascade,
-	FOREIGN KEY("class_id") REFERENCES "classes"("id") on update cascade on delete set null
+	FOREIGN KEY("season_id") REFERENCES "seasons"("id") on update cascade on delete cascade
 );
