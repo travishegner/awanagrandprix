@@ -3,9 +3,14 @@ package dashboard
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
+
+func init() {
+	rand.Seed(int64(time.Now().Nanosecond()))
+}
 
 type Car struct {
 	Id     int64
@@ -17,7 +22,12 @@ type Car struct {
 }
 
 func FetchCars(seasonId int64) ([]*Car, error) {
-	stmt, err := db.Prepare("select c.id, c.number, c.name, c.weight, c.driver, cls.Name from cars c inner join classes cls on c.class_id=cls.id where c.season_id=?")
+	stmt, err := db.Prepare(`
+select c.id,c.number, c.name, c.weight, c.driver, cls.Name
+from cars c
+inner join classes cls on c.class_id=cls.id
+where cls.season_id=?
+`)
 	if err != nil {
 		log.WithError(err).Error("Failed to prepare statement.")
 		return nil, err
@@ -82,13 +92,13 @@ func AddCar(seasonId, classId int64, number string, name string, weight float64,
 		}
 	}
 
-	stmt, err := db.Prepare("insert into cars (season_id,class_id,number,name,weight,driver) values (?,?,?,?,?,?)")
+	stmt, err := db.Prepare("insert into cars (class_id,number,name,weight,driver) values (?,?,?,?,?)")
 	if err != nil {
 		log.WithError(err).Error("Failed to prepare statement.")
 		return err
 	}
 
-	_, err = stmt.Exec(seasonId, classId, number, name, weight, driver)
+	_, err = stmt.Exec(classId, number, name, weight, driver)
 	if err != nil {
 		log.WithError(err).Error("Failed to execute insert statement.")
 		return err

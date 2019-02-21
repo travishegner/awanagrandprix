@@ -192,6 +192,11 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				errs = append(errs, err.Error())
 			}
+		case "generateheats":
+			err = GenerateHeats(s)
+			if err != nil {
+				errs = append(errs, err.Error())
+			}
 		}
 	}
 
@@ -217,7 +222,7 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 
 	err = tpl.Execute(w, sp)
 	if err != nil {
-		http.Error(w, "failed to execute template", 500)
+		log.WithError(err).Error("failed to execute template")
 		return
 	}
 }
