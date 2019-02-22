@@ -95,3 +95,7 @@ func (s *Season) Classes() ([]*Class, error) {
 func (s *Season) Runs() ([]*Run, error) {
 	return FetchRuns(s.Id)
 }
+
+func (s *Season) Heats() ([]*Heat, error) {
+	return FetchHeats(s.Id)
+}

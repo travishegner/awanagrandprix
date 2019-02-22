@@ -2,7 +2,6 @@ package dashboard
 
 import (
 	"database/sql"
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -14,56 +13,36 @@ func init() {
 }
 
 type Run struct {
-	Id     int64
-	CarId  int64
-	LaneId int64
+	Id         int64
+	CarId      int64
+	LaneId     int64
+	HeatNumber sql.NullInt64
+	Time       sql.NullFloat64
 }
 
-func (r *Run) FetchHeat() (int64, error) {
-	stmt, err := db.Prepare("select heat from runs where id=:rid")
+func SetRunTime(r int64, t float64) error {
+	stmt, err := db.Prepare("update runs set time=:t where id=:rid")
 	if err != nil {
 		log.WithError(err).Error("failed to prepare statement")
-		return -1, err
+		return err
 	}
 
-	var heat sql.NullInt64
-	err = stmt.QueryRow(sql.Named("rid", r.Id)).Scan(&heat)
+	_, err = stmt.Exec(sql.Named("t", t), sql.Named("rid", r))
 	if err != nil {
-		log.WithError(err).Error("failed to execute query")
-		return -1, err
+		log.WithError(err).Error("failed to update time")
+		return err
 	}
 
-	if !heat.Valid {
-		return -1, fmt.Errorf("heat undefined for this run")
-	}
-
-	return heat.Int64, nil
+	return nil
 }
 
-func (r *Run) FetchTime() (float64, error) {
-	stmt, err := db.Prepare("select time from runs where id=:rid")
-	if err != nil {
-		log.WithError(err).Error("failed to prepare statement")
-		return -1, err
-	}
-
-	var time sql.NullFloat64
-	err = stmt.QueryRow(sql.Named("rid", r.Id)).Scan(&time)
-	if err != nil {
-		log.WithError(err).Error("failed to execute query")
-		return -1, err
-	}
-
-	if !time.Valid {
-		return -1, fmt.Errorf("heat undefined for this run")
-	}
-
-	return time.Float64, nil
+func (r *Run) SetTime(t float64) error {
+	return SetRunTime(r.Id, t)
 }
 
 func FetchRuns(seasonId int64) ([]*Run, error) {
 	stmt, err := db.Prepare(`
-select r.id, r.car_id, r.lane_id
+select r.id, r.car_id, r.lane_id, r.heat, r.time
 from runs r
 inner join cars c on r.car_id=c.id
 inner join classes cls on c.class_id=cls.id
@@ -85,29 +64,17 @@ where cls.season_id=:sid
 		var id int64
 		var carid int64
 		var laneid int64
-		err = rows.Scan(&id, &carid, &laneid)
+		var heat sql.NullInt64
+		var time sql.NullFloat64
+		err = rows.Scan(&id, &carid, &laneid, &heat, &time)
 		if err != nil {
 			log.WithError(err).Error("Failed to read row.")
 			continue
 		}
-		runs = append(runs, &Run{Id: id, CarId: carid, LaneId: laneid})
+		runs = append(runs, &Run{Id: id, CarId: carid, LaneId: laneid, HeatNumber: heat, Time: time})
 	}
 
 	return runs, nil
-}
-
-func GenerateHeats(s *Season) error {
-	err := GenerateRuns(s)
-	if err != nil {
-		log.WithError(err).Error("failed to generate runs")
-		return err
-	}
-
-	//TODO: assign runs to heats
-	//1. each heat should only have one class
-	//2. heats should alternate classes
-
-	return nil
 }
 
 func GenerateRuns(s *Season) error {

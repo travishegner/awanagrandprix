@@ -28,11 +28,41 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col">
-				{{if not .Season.Runs}}
-						<form class="form-inline p-4" method="post">
-							<input type="hidden" name="action" value="generateheats">
-							<button class="btn btn-sm btn-primary ml-2">Generate Heats!</button>
-						</form>
+				{{$heats := .Season.Heats}}
+				{{if not $heats}}
+					<form class="form-inline p-4" method="post">
+						<input type="hidden" name="action" value="generateheats">
+						<button class="btn btn-sm btn-primary ml-2">Generate Heats!</button>
+					</form>
+				{{else}}
+				<div class="row">
+						<div class="col">
+							<table class="table table-hover table-sm">
+								<thead class="thead-light">
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Red</th>
+										<th scope="col">Green</th>
+										<th scope="col">Blue</th>
+										<th scope="col">Yellow</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									{{range $heats}}
+									<tr>
+										<td>{{.Number}}</td>
+										<td>{{.Red.CarId}}</td>
+										<td>{{.Green.CarId}}</td>
+										<td>{{.Blue.CarId}}</td>
+										<td>{{.Yellow.CarId}}</td>
+										<td></td>
+									</tr>
+									{{end}}
+								</tbody>
+							</table>
+						</div>
+				</div>
 				{{end}}
 			</div>
 		</div>
