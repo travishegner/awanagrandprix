@@ -1,6 +1,7 @@
 package dashboard
 
 import (
+	"database/sql"
 	"fmt"
 	"math/rand"
 	"time"
@@ -26,14 +27,14 @@ func FetchCars(seasonId int64) ([]*Car, error) {
 select c.id,c.number, c.name, c.weight, c.driver, cls.Name
 from cars c
 inner join classes cls on c.class_id=cls.id
-where cls.season_id=?
+where cls.season_id=:sid
 `)
 	if err != nil {
 		log.WithError(err).Error("Failed to prepare statement.")
 		return nil, err
 	}
 
-	rows, err := stmt.Query(seasonId)
+	rows, err := stmt.Query(sql.Named("sid", seasonId))
 	if err != nil {
 		log.WithError(err).Error("Failed to execute query.")
 		return nil, err
@@ -92,13 +93,19 @@ func AddCar(seasonId, classId int64, number string, name string, weight float64,
 		}
 	}
 
-	stmt, err := db.Prepare("insert into cars (class_id,number,name,weight,driver) values (?,?,?,?,?)")
+	stmt, err := db.Prepare("insert into cars (class_id,number,name,weight,driver) values (:cid,:num,:name,:wt,:drv)")
 	if err != nil {
 		log.WithError(err).Error("Failed to prepare statement.")
 		return err
 	}
 
-	_, err = stmt.Exec(classId, number, name, weight, driver)
+	_, err = stmt.Exec(
+		sql.Named("cid", classId),
+		sql.Named("num", number),
+		sql.Named("name", name),
+		sql.Named("wt", weight),
+		sql.Named("drv", driver),
+	)
 	if err != nil {
 		log.WithError(err).Error("Failed to execute insert statement.")
 		return err

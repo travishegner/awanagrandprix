@@ -20,14 +20,14 @@ type Run struct {
 }
 
 func (r *Run) FetchHeat() (int64, error) {
-	stmt, err := db.Prepare("select heat from runs where id=?")
+	stmt, err := db.Prepare("select heat from runs where id=:rid")
 	if err != nil {
 		log.WithError(err).Error("failed to prepare statement")
 		return -1, err
 	}
 
 	var heat sql.NullInt64
-	err = stmt.QueryRow(r.Id).Scan(&heat)
+	err = stmt.QueryRow(sql.Named("rid", r.Id)).Scan(&heat)
 	if err != nil {
 		log.WithError(err).Error("failed to execute query")
 		return -1, err
@@ -41,14 +41,14 @@ func (r *Run) FetchHeat() (int64, error) {
 }
 
 func (r *Run) FetchTime() (float64, error) {
-	stmt, err := db.Prepare("select time from runs where id=?")
+	stmt, err := db.Prepare("select time from runs where id=:rid")
 	if err != nil {
 		log.WithError(err).Error("failed to prepare statement")
 		return -1, err
 	}
 
 	var time sql.NullFloat64
-	err = stmt.QueryRow(r.Id).Scan(&time)
+	err = stmt.QueryRow(sql.Named("rid", r.Id)).Scan(&time)
 	if err != nil {
 		log.WithError(err).Error("failed to execute query")
 		return -1, err
@@ -67,14 +67,14 @@ select r.id, r.car_id, r.lane_id
 from runs r
 inner join cars c on r.car_id=c.id
 inner join classes cls on c.class_id=cls.id
-where cls.season_id=?
+where cls.season_id=:sid
 `)
 	if err != nil {
 		log.WithError(err).Error("Failed to prepare statement.")
 		return nil, err
 	}
 
-	rows, err := stmt.Query(seasonId)
+	rows, err := stmt.Query(sql.Named("sid", seasonId))
 	if err != nil {
 		log.WithError(err).Error("Failed to execute query.")
 		return nil, err
@@ -111,7 +111,7 @@ func GenerateHeats(s *Season) error {
 }
 
 func GenerateRuns(s *Season) error {
-	stmt, err := db.Prepare("insert into runs (car_id,lane_id) values (?,?)")
+	stmt, err := db.Prepare("insert into runs (car_id,lane_id) values (:cid,:lid)")
 	if err != nil {
 		log.WithError(err).Error("Failed to prepare statement.")
 		return err
@@ -131,7 +131,7 @@ func GenerateRuns(s *Season) error {
 	for _, l := range lanes {
 		for _, index := range rand.Perm(len(cars)) {
 			c := cars[index]
-			_, err = stmt.Exec(c.Id, l.Id)
+			_, err = stmt.Exec(sql.Named("cid", c.Id), sql.Named("lid", l.Id))
 			if err != nil {
 				log.WithError(err).Error("failed insert run")
 				continue

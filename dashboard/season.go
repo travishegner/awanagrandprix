@@ -1,6 +1,7 @@
 package dashboard
 
 import (
+	"database/sql"
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
@@ -45,13 +46,13 @@ func NewSeasonPage(errs []string, season *Season, active string) (*SeasonPage, e
 }
 
 func AddSeason(name string) (int64, error) {
-	stmt, err := db.Prepare("insert into seasons (name) values (?)")
+	stmt, err := db.Prepare("insert into seasons (name) values (:name)")
 	if err != nil {
 		log.WithError(err).Error("Failed to prepare statement.")
 		return -1, err
 	}
 
-	res, err := stmt.Exec(name)
+	res, err := stmt.Exec(sql.Named("name", name))
 	if err != nil {
 		log.WithError(err).Error("Failed to execute insert statement.")
 		return -1, err
@@ -67,14 +68,14 @@ func AddSeason(name string) (int64, error) {
 }
 
 func FetchSeason(id int64) (*Season, error) {
-	stmt, err := db.Prepare("select name from seasons where id=?")
+	stmt, err := db.Prepare("select name from seasons where id=:sid")
 	if err != nil {
 		log.WithError(err).Error("failed to prepare")
 		return nil, err
 	}
 
 	var name string
-	err = stmt.QueryRow(id).Scan(&name)
+	err = stmt.QueryRow(sql.Named("sid", id)).Scan(&name)
 	if err != nil {
 		log.WithError(err).Error("failed to get season info")
 		return nil, err
