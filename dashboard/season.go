@@ -13,9 +13,10 @@ type Season struct {
 }
 
 type SeasonPage struct {
-	Errors []string
-	Tabs   map[string]*Tab
-	Season *Season
+	Errors   []string
+	Tabs     map[string]*Tab
+	HeatEdit int64
+	Season   *Season
 }
 
 type Tab struct {

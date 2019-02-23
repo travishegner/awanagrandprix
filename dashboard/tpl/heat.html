@@ -1,0 +1,55 @@
+<div class="row text-center p-2">
+	<div class="col">
+		<div class="bg-danger mb-3" style="width: 100%; height: 1.5rem"></div>
+		{{if .Red}}
+		<h3 class="text-secondary">{{.Red.Car.Number}}</h3>
+		<h2>{{.Red.Car.Name}}</h2>
+		<h3 class="text-secondary">{{.Red.Car.Driver}}</h3>
+		{{end}}
+	</div>
+	<div class="col">
+		<div class="bg-success mb-3" style="width: 100%; height: 1.5rem"></div>
+		{{if .Green}}
+		<h3 class="text-secondary">{{.Green.Car.Number}}</h3>
+		<h2>{{.Green.Car.Name}}</h2>
+		<h3 class="text-secondary">{{.Green.Car.Driver}}</h3>
+		{{end}}
+	</div>
+	<div class="col">
+		<div class="bg-primary mb-3" style="width: 100%; height: 1.5rem"></div>
+		{{if .Blue}}
+		<h3 class="text-secondary">{{.Blue.Car.Number}}</h3>
+		<h2>{{.Blue.Car.Name}}</h2>
+		<h3 class="text-secondary">{{.Blue.Car.Driver}}</h3>
+		{{end}}
+	</div>
+	<div class="col">
+		<div class="bg-warning mb-3" style="width: 100%; height: 1.5rem"></div>
+		{{if .Yellow}}
+		<h3 class="text-secondary">{{.Yellow.Car.Number}}</h3>
+		<h2>{{.Yellow.Car.Name}}</h2>
+		<h3 class="text-secondary">{{.Yellow.Car.Driver}}</h3>
+		{{end}}
+	</div>
+	<div class="col-1">
+	</div>
+</div>
+<form>
+	<div class="row">
+		<div class="col">
+			<input class="form-control form-control-lg" name="redtime" placeholder="Red Time">
+		</div>
+		<div class="col">
+			<input class="form-control form-control-lg" name="greentime" placeholder="Green Time">
+		</div>
+		<div class="col">
+			<input class="form-control form-control-lg" name="bluetime" placeholder="Blue Time">
+		</div>
+		<div class="col">
+			<input class="form-control form-control-lg" name="yellowtime" placeholder="Yellow Time">
+		</div>
+		<div class="col-1">
+			<button class="btn btn-lg btn-primary">Save</button>
+		</div>
+	</div>
+</form>

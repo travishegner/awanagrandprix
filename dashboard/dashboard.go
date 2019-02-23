@@ -97,9 +97,44 @@ func (dash *Dashboard) getTemplate(name string) (*template.Template, error) {
 		log.WithField("name", name).WithError(err).Error("Error parsing template bytes.")
 		return nil, err
 	}
-	tpl.New("head").Parse(dash.head)
-	tpl.New("foot").Parse(dash.foot)
-	tpl.New("error").Parse(dash.err)
+	_, err = tpl.New("head").Parse(dash.head)
+	if err != nil {
+		log.WithError(err).Error("error parsing head template")
+		return nil, err
+	}
+	_, err = tpl.New("foot").Parse(dash.foot)
+	if err != nil {
+		log.WithError(err).Error("error parsing foot template")
+		return nil, err
+	}
+	_, err = tpl.New("error").Parse(dash.err)
+	if err != nil {
+		log.WithError(err).Error("error parsing error template")
+		return nil, err
+	}
+
+	if name == "heats" {
+		hl, err := Asset("tpl/heatlist.html")
+		if err != nil {
+			log.WithField("name", name).WithError(err).Error("failed to load heatlist template asset")
+			return nil, err
+		}
+		he, err := Asset("tpl/heat.html")
+		if err != nil {
+			log.WithField("name", name).WithError(err).Error("failed to load heat template asset")
+			return nil, err
+		}
+		_, err = tpl.New("heatlist").Parse(string(hl))
+		if err != nil {
+			log.WithError(err).Error("error parsing heatlist template")
+			return nil, err
+		}
+		_, err = tpl.New("heat").Parse(string(he))
+		if err != nil {
+			log.WithError(err).Error("error parsing heat template")
+			return nil, err
+		}
+	}
 
 	return tpl, nil
 }
@@ -218,6 +253,16 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 		log.WithError(err).Error("failed to generate season page")
 		http.Error(w, "failed to generate season page", 500)
 		return
+	}
+
+	he := r.FormValue("heatedit")
+	if he != "" {
+		hid, err := strconv.ParseInt(he, 10, 64)
+		sp.HeatEdit = hid
+		if err != nil {
+			log.WithError(err).Warningf("failed to convert %v to int64", he)
+			sp.HeatEdit = 0
+		}
 	}
 
 	err = tpl.Execute(w, sp)

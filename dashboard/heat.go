@@ -15,6 +15,27 @@ type Heat struct {
 	Yellow *Run
 }
 
+func (h *Heat) Complete() bool {
+	red := false
+	green := false
+	blue := false
+	yellow := false
+	if h.Red != nil {
+		red = h.Red.Time.Valid
+	}
+	if h.Green != nil {
+		green = h.Green.Time.Valid
+	}
+	if h.Blue != nil {
+		blue = h.Blue.Time.Valid
+	}
+	if h.Yellow != nil {
+		yellow = h.Yellow.Time.Valid
+	}
+
+	return red && green && blue && yellow
+}
+
 func FetchHeats(seasonId int64) ([]*Heat, error) {
 	runs, err := FetchRuns(seasonId)
 	if err != nil {
@@ -160,5 +181,12 @@ update runs set heat=:ht where id in ((select id from red), (select id from blue
 		heat += 1
 	}
 
+	return FixLastHeats(s.Id)
+}
+
+func FixLastHeats(seasonId int64) error {
+	//TODO: if the last heat of a class has only
+	//one participant, move one from the previous heat
+	//to the last heat
 	return nil
 }
