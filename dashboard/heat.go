@@ -2,7 +2,7 @@ package dashboard
 
 import (
 	"database/sql"
-	"fmt"
+	"sort"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -29,7 +29,9 @@ func FetchHeats(seasonId int64) ([]*Heat, error) {
 			log.WithError(err).Error("failed to get heat number from run")
 			return nil, err
 		}
-		heatMap[n] = &Heat{Number: n}
+		if _, ok := heatMap[n]; !ok {
+			heatMap[n] = &Heat{Number: n}
+		}
 
 		switch r.LaneId {
 		case 1: //red
@@ -49,6 +51,10 @@ func FetchHeats(seasonId int64) ([]*Heat, error) {
 		heats[index] = h
 		index++
 	}
+
+	sort.Slice(heats, func(i, j int) bool {
+		return heats[i].Number < heats[j].Number
+	})
 
 	return heats, nil
 }
@@ -137,13 +143,11 @@ update runs set heat=:ht where id in ((select id from red), (select id from blue
 
 		attempt += 1
 		if ra == 0 {
-			fmt.Printf("finished class %v\n", cls)
 			dones[cls] = true
 			done := true
 			for _, b := range dones {
 				done = done && b
 				if !done {
-					fmt.Printf("not done yet\n")
 					break
 				}
 			}

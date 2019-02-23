@@ -28,6 +28,7 @@ select c.id,c.number, c.name, c.weight, c.driver, cls.Name
 from cars c
 inner join classes cls on c.class_id=cls.id
 where cls.season_id=:sid
+order by c.Id
 `)
 	if err != nil {
 		log.WithError(err).Error("Failed to prepare statement.")
