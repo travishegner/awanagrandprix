@@ -4,8 +4,7 @@
 <nav>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="/">Seasons</a></li>
-		<li class="breadcrumb-item">{{.Season.Name}}</li>
-		<li class="breadcrumb-item active">Leaderboard</li>
+		<li class="breadcrumb-item active">{{.Season.Name}}</li>
 	</ol>
 </nav>
 <div class="container-fluid">
@@ -37,7 +36,7 @@
 				{{else}}
 				<div class="row">
 						<div class="col">
-							<table class="table table-hover table-sm">
+							<table class="table table-hover table-sm table-bordered text-center">
 								<thead class="thead-light">
 									<tr>
 										<th scope="col">#</th>
@@ -52,11 +51,11 @@
 									{{range $heats}}
 									<tr>
 										<td>{{.Number}}</td>
-										<td>{{.Red}}</td>
-										<td>{{.Green}}</td>
-										<td>{{.Blue}}</td>
-										<td>{{.Yellow}}</td>
-										<td></td>
+										<td>{{if .Red}}{{if .Red.Time.Valid}}{{.Red.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+										<td>{{if .Green}}{{if .Green.Time.Valid}}{{.Green.time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+										<td>{{if .Blue}}{{if .Blue.Time.Valid}}{{.Blue.time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+										<td>{{if .Yellow}}{{if .Yellow.Time.Valid}}{{.Yellow.time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+										<td><a href="#">Edit</a></td>
 									</tr>
 									{{end}}
 								</tbody>

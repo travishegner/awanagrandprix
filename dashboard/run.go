@@ -14,8 +14,8 @@ func init() {
 
 type Run struct {
 	Id         int64
-	CarId      int64
-	LaneId     int64
+	Car        *Car
+	Lane       *Lane
 	HeatNumber sql.NullInt64
 	Time       sql.NullFloat64
 }
@@ -42,10 +42,11 @@ func (r *Run) SetTime(t float64) error {
 
 func FetchRuns(seasonId int64) ([]*Run, error) {
 	stmt, err := db.Prepare(`
-select r.id, r.car_id, r.lane_id, r.heat, r.time
+select r.id, c.id, c.number, c.name, c.weight, c.driver, cls.id, cls.name, l.id, l.color, r.heat, r.time
 from runs r
 inner join cars c on r.car_id=c.id
 inner join classes cls on c.class_id=cls.id
+inner join lanes l on r.lane_id=l.id
 where cls.season_id=:sid
 `)
 	if err != nil {
@@ -63,15 +64,42 @@ where cls.season_id=:sid
 	for rows.Next() {
 		var id int64
 		var carid int64
+		var carnumber string
+		var carname sql.NullString
+		var carweight float64
+		var driver string
+		var classid int64
+		var classname string
 		var laneid int64
+		var color string
 		var heat sql.NullInt64
 		var time sql.NullFloat64
-		err = rows.Scan(&id, &carid, &laneid, &heat, &time)
+		err = rows.Scan(&id, &carid, &carnumber, &carname, &carweight, &driver, &classid, &classname, &laneid, &color, &heat, &time)
 		if err != nil {
 			log.WithError(err).Error("Failed to read row.")
 			continue
 		}
-		runs = append(runs, &Run{Id: id, CarId: carid, LaneId: laneid, HeatNumber: heat, Time: time})
+		r := &Run{
+			Id: id,
+			Car: &Car{
+				Id:     carid,
+				Number: carnumber,
+				Name:   carname.String,
+				Weight: carweight,
+				Driver: driver,
+				Class: &Class{
+					Id:   classid,
+					Name: classname,
+				},
+			},
+			Lane: &Lane{
+				Id:    laneid,
+				Color: color,
+			},
+			HeatNumber: heat,
+			Time:       time,
+		}
+		runs = append(runs, r)
 	}
 
 	return runs, nil

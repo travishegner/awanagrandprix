@@ -33,7 +33,7 @@ func FetchHeats(seasonId int64) ([]*Heat, error) {
 			heatMap[n] = &Heat{Number: n}
 		}
 
-		switch r.LaneId {
+		switch r.Lane.Id {
 		case 1: //red
 			heatMap[n].Red = runs[i]
 		case 2: //green

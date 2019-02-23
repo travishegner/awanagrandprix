@@ -19,12 +19,12 @@ type Car struct {
 	Name   string
 	Weight float64
 	Driver string
-	Class  string
+	Class  *Class
 }
 
 func FetchCars(seasonId int64) ([]*Car, error) {
 	stmt, err := db.Prepare(`
-select c.id,c.number, c.name, c.weight, c.driver, cls.Name
+select c.id, c.number, c.name, c.weight, c.driver, cls.id, cls.Name
 from cars c
 inner join classes cls on c.class_id=cls.id
 where cls.season_id=:sid
@@ -48,8 +48,9 @@ order by c.Id
 		var name string
 		var weight float64
 		var driver string
-		var class string
-		err = rows.Scan(&id, &number, &name, &weight, &driver, &class)
+		var classId int64
+		var className string
+		err = rows.Scan(&id, &number, &name, &weight, &driver, &classId, &className)
 		if err != nil {
 			log.WithError(err).Error("Failed to read row.")
 			continue
@@ -60,7 +61,7 @@ order by c.Id
 			Name:   name,
 			Weight: weight,
 			Driver: driver,
-			Class:  class,
+			Class:  &Class{Id: classId, Name: className},
 		}
 		cars = append(cars, c)
 	}
