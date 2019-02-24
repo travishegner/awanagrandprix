@@ -38,22 +38,22 @@
 	<input type="hidden" name="action" value="heattimes">
 	<div class="col">
 		{{if .Red}}
-		<input class="form-control form-control-lg" name="redtime" placeholder="Red Time" required>
+		<input class="form-control form-control-lg" name="redtime" placeholder="Red Time" value="{{if .Red.Time.Valid}}{{.Red.Time.Float64}}{{end}}" required>
 		{{end}}
 	</div>
 	<div class="col">
 		{{if .Green}}
-		<input class="form-control form-control-lg" name="greentime" placeholder="Green Time" required>
+		<input class="form-control form-control-lg" name="greentime" placeholder="Green Time" value="{{if .Green.Time.Valid}}{{.Green.Time.Float64}}{{end}}" required>
 		{{end}}
 	</div>
 	<div class="col">
 		{{if .Blue}}
-		<input class="form-control form-control-lg" name="bluetime" placeholder="Blue Time" required>
+		<input class="form-control form-control-lg" name="bluetime" placeholder="Blue Time" value="{{if .Blue.Time.Valid}}{{.Blue.Time.Float64}}{{end}}" required>
 		{{end}}
 	</div>
 	<div class="col">
 		{{if .Yellow}}
-		<input class="form-control form-control-lg" name="yellowtime" placeholder="Yellow Time" required>
+		<input class="form-control form-control-lg" name="yellowtime" placeholder="Yellow Time" value="{{if .Yellow.Time.Valid}}{{.Yellow.Time.Float64}}{{end}}" required>
 		{{end}}
 	</div>
 	<div class="col-2">

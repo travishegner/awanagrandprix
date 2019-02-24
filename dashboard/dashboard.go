@@ -239,37 +239,56 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 				log.WithError(err).Warning("failed to parse heat number")
 			}
 
-			rt := r.FormValue("redtime")
-			frt, err := strconv.ParseFloat(rt, 64)
+			h, err := FetchHeat(s.Id, hn)
 			if err != nil {
-				log.WithError(err).Error("failed to parse red time")
-				http.Error(w, "failed to parse red time", 500)
-				return
-			}
-			gt := r.FormValue("greentime")
-			fgt, err := strconv.ParseFloat(gt, 64)
-			if err != nil {
-				log.WithError(err).Error("failed to parse green time")
-				http.Error(w, "failed to parse green time", 500)
-				return
-			}
-			bt := r.FormValue("bluetime")
-			fbt, err := strconv.ParseFloat(bt, 64)
-			if err != nil {
-				log.WithError(err).Error("failed to parse blue time")
-				http.Error(w, "failed to parse blue time", 500)
-				return
-			}
-			yt := r.FormValue("yellowtime")
-			fyt, err := strconv.ParseFloat(yt, 64)
-			if err != nil {
-				log.WithError(err).Error("failed to parse blue time")
-				http.Error(w, "failed to parse blue time", 500)
+				log.WithField("heatNumber", hn).WithError(err).Error("failed to fetch heat")
+				http.Error(w, "failed to fetch heat", 500)
 				return
 			}
 
-			//TODO: actually save times
-			fmt.Println(frt, fgt, fbt, fyt)
+			rt := r.FormValue("redtime")
+			if rt != "" {
+				frt, err := strconv.ParseFloat(rt, 64)
+				if err != nil {
+					log.WithError(err).Error("failed to parse red time")
+					http.Error(w, "failed to parse red time", 500)
+					return
+				}
+				h.Red.SetTime(frt)
+			}
+
+			gt := r.FormValue("greentime")
+			if gt != "" {
+				fgt, err := strconv.ParseFloat(gt, 64)
+				if err != nil {
+					log.WithError(err).Error("failed to parse green time")
+					http.Error(w, "failed to parse green time", 500)
+					return
+				}
+				h.Green.SetTime(fgt)
+			}
+
+			bt := r.FormValue("bluetime")
+			if bt != "" {
+				fbt, err := strconv.ParseFloat(bt, 64)
+				if err != nil {
+					log.WithError(err).Error("failed to parse blue time")
+					http.Error(w, "failed to parse blue time", 500)
+					return
+				}
+				h.Blue.SetTime(fbt)
+			}
+
+			yt := r.FormValue("yellowtime")
+			if yt != "" {
+				fyt, err := strconv.ParseFloat(yt, 64)
+				if err != nil {
+					log.WithError(err).Error("failed to parse blue time")
+					http.Error(w, "failed to parse blue time", 500)
+					return
+				}
+				h.Yellow.SetTime(fyt)
+			}
 
 			http.Redirect(w, r, fmt.Sprintf("season?id=%v&tab=heats&heatedit=%v", s.Id, hn+1), 301)
 			return

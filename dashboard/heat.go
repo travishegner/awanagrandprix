@@ -16,10 +16,11 @@ type Heat struct {
 }
 
 func (h *Heat) Complete() bool {
-	red := false
-	green := false
-	blue := false
-	yellow := false
+	red := h.Red == nil
+	green := h.Green == nil
+	blue := h.Blue == nil
+	yellow := h.Yellow == nil
+
 	if h.Red != nil {
 		red = h.Red.Time.Valid
 	}
@@ -34,6 +35,33 @@ func (h *Heat) Complete() bool {
 	}
 
 	return red && green && blue && yellow
+}
+
+func FetchHeat(seasonId, heatNumber int64) (*Heat, error) {
+	runs, err := FetchRuns(seasonId)
+	if err != nil {
+		log.WithError(err).Error("failed to get runs")
+		return nil, err
+	}
+
+	h := &Heat{Number: heatNumber}
+	for i, r := range runs {
+		if !r.HeatNumber.Valid || r.HeatNumber.Int64 != heatNumber {
+			continue
+		}
+		switch r.Lane.Color {
+		case "red":
+			h.Red = runs[i]
+		case "green":
+			h.Green = runs[i]
+		case "blue":
+			h.Blue = runs[i]
+		case "yellow":
+			h.Yellow = runs[i]
+		}
+	}
+
+	return h, nil
 }
 
 func FetchHeats(seasonId int64) ([]*Heat, error) {

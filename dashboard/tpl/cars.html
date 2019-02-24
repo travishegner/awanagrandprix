@@ -57,6 +57,7 @@
 										<td></td>
 									</tr>
 									{{end}}
+									{{if not .Season.Heats}}
 									<tr>
 										<form class="form-inline" method="post">
 											<input type="hidden" name="action" value="addcar">
@@ -75,6 +76,7 @@
 											<td><button class="btn btn-primary">Add</button></td>
 										</form>
 									</tr>
+									{{end}}
 								</tbody>
 							</table>
 						</div>

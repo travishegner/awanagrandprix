@@ -11,10 +11,10 @@
 				<thead class="thead-light">
 					<tr>
 						<th scope="col">#</th>
-						<th scope="col">Red</th>
-						<th scope="col">Green</th>
-						<th scope="col">Blue</th>
-						<th scope="col">Yellow</th>
+						<th scope="col" class="bg-danger">Red</th>
+						<th scope="col" class="bg-success">Green</th>
+						<th scope="col" class="bg-primary">Blue</th>
+						<th scope="col" class="bg-warning">Yellow</th>
 						<th></th>
 					</tr>
 				</thead>
@@ -23,9 +23,9 @@
 					<tr>
 						<td>{{.Number}}</td>
 						<td>{{if .Red}}{{if .Red.Time.Valid}}{{.Red.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
-						<td>{{if .Green}}{{if .Green.Time.Valid}}{{.Green.time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
-						<td>{{if .Blue}}{{if .Blue.Time.Valid}}{{.Blue.time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
-						<td>{{if .Yellow}}{{if .Yellow.Time.Valid}}{{.Yellow.time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+						<td>{{if .Green}}{{if .Green.Time.Valid}}{{.Green.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+						<td>{{if .Blue}}{{if .Blue.Time.Valid}}{{.Blue.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+						<td>{{if .Yellow}}{{if .Yellow.Time.Valid}}{{.Yellow.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
 						<td><a class="btn {{if .Complete}}btn-secondary{{else}}btn-primary{{end}} btn-sm pv-0" href="season?id={{$s.Id}}&tab=heats&heatedit={{.Number}}">Edit</a></td>
 					</tr>
 					{{end}}
