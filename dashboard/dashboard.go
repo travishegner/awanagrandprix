@@ -232,6 +232,47 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				errs = append(errs, err.Error())
 			}
+		case "heattimes":
+			he := r.FormValue("heatedit")
+			hn, err := strconv.ParseInt(he, 10, 64)
+			if err != nil {
+				log.WithError(err).Warning("failed to parse heat number")
+			}
+
+			rt := r.FormValue("redtime")
+			frt, err := strconv.ParseFloat(rt, 64)
+			if err != nil {
+				log.WithError(err).Error("failed to parse red time")
+				http.Error(w, "failed to parse red time", 500)
+				return
+			}
+			gt := r.FormValue("greentime")
+			fgt, err := strconv.ParseFloat(gt, 64)
+			if err != nil {
+				log.WithError(err).Error("failed to parse green time")
+				http.Error(w, "failed to parse green time", 500)
+				return
+			}
+			bt := r.FormValue("bluetime")
+			fbt, err := strconv.ParseFloat(bt, 64)
+			if err != nil {
+				log.WithError(err).Error("failed to parse blue time")
+				http.Error(w, "failed to parse blue time", 500)
+				return
+			}
+			yt := r.FormValue("yellowtime")
+			fyt, err := strconv.ParseFloat(yt, 64)
+			if err != nil {
+				log.WithError(err).Error("failed to parse blue time")
+				http.Error(w, "failed to parse blue time", 500)
+				return
+			}
+
+			//TODO: actually save times
+			fmt.Println(frt, fgt, fbt, fyt)
+
+			http.Redirect(w, r, fmt.Sprintf("season?id=%v&tab=heats&heatedit=%v", s.Id, hn+1), 301)
+			return
 		}
 	}
 
