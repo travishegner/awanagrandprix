@@ -100,3 +100,60 @@ func (s *Season) Runs() ([]*Run, error) {
 func (s *Season) Heats() ([]*Heat, error) {
 	return FetchHeats(s.Id)
 }
+
+func (s *Season) CurrentHeat() (*Heat, error) {
+	heats, err := s.Heats()
+	if err != nil {
+		log.WithError(err).Error("failed to get heats")
+		return nil, err
+	}
+
+	for _, h := range heats {
+		if h.Complete() {
+			continue
+		}
+		return h, nil
+	}
+
+	return nil, nil
+}
+
+func (s *Season) PreviousHeat() (*Heat, error) {
+	heats, err := s.Heats()
+	if err != nil {
+		log.WithError(err).Error("failed to get heats")
+		return nil, err
+	}
+
+	for i, h := range heats {
+		if h.Complete() {
+			continue
+		}
+		if i == 0 {
+			return nil, nil
+		}
+		return heats[i-1], nil
+	}
+
+	return nil, nil
+}
+
+func (s *Season) NextHeat() (*Heat, error) {
+	heats, err := s.Heats()
+	if err != nil {
+		log.WithError(err).Error("failed to get heats")
+		return nil, err
+	}
+
+	for i, h := range heats {
+		if h.Complete() {
+			continue
+		}
+		if i == len(heats)-1 {
+			return nil, nil
+		}
+		return heats[i+1], nil
+	}
+
+	return nil, nil
+}

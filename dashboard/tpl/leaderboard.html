@@ -24,8 +24,146 @@
 			</ul>
 		</div>
 	</div>
-	<div class="container-fluid">
+	<div class="container-fluid text-center d-inline-block">
+		{{$ph := .Season.PreviousHeat}}
+		{{$ch := .Season.CurrentHeat}}
+		{{$nh := .Season.NextHeat}}
 		<div class="row">
+			<div class="col-3"></div>
+			<div class="col border">
+				<div class="row">
+					<div class="col">
+						<h3>Next Heat</h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="bg-danger mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $nh.Red}}
+						<h6 class="text-secondary">{{$nh.Red.Car.Number}}</h6>
+						<h5>{{$nh.Red.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$nh.Red.Car.Driver}}</h6>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-success mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $nh.Green}}
+						<h6 class="text-secondary">{{$nh.Green.Car.Number}}</h6>
+						<h5>{{$nh.Green.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$nh.Green.Car.Driver}}</h6>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-primary mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $nh.Blue}}
+						<h6 class="text-secondary">{{$nh.Blue.Car.Number}}</h6>
+						<h5>{{$nh.Blue.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$nh.Blue.Car.Driver}}</h6>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-warning mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $nh.Yellow}}
+						<h6 class="text-secondary">{{$nh.Yellow.Car.Number}}</h6>
+						<h5>{{$nh.Yellow.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$nh.Yellow.Car.Driver}}</h6>
+						{{end}}
+					</div>
+				</div>
+			</div>
+			<div class="col-3"></div>
+		</div>
+		<div class="row text-center align-middle">
+			<div class="col">
+				<div class="row">
+					<div class="col">
+						<h1>Current Heat</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="bg-danger mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ch.Red}}
+						<h4 class="text-secondary">{{$ch.Red.Car.Number}}</h4>
+						<h3>{{$ch.Red.Car.Name}}</h3>
+						<h4 class="text-secondary">{{$ch.Red.Car.Driver}}</h4>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-success mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ch.Green}}
+						<h4 class="text-secondary">{{$ch.Green.Car.Number}}</h4>
+						<h3>{{$ch.Green.Car.Name}}</h3>
+						<h4 class="text-secondary">{{$ch.Green.Car.Driver}}</h4>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-primary mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ch.Blue}}
+						<h4 class="text-secondary">{{$ch.Blue.Car.Number}}</h4>
+						<h3>{{$ch.Blue.Car.Name}}</h3>
+						<h4 class="text-secondary">{{$ch.Blue.Car.Driver}}</h4>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-warning mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ch.Yellow}}
+						<h4 class="text-secondary">{{$ch.Yellow.Car.Number}}</h4>
+						<h3>{{$ch.Yellow.Car.Name}}</h3>
+						<h4 class="text-secondary">{{$ch.Yellow.Car.Driver}}</h4>
+						{{end}}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row text-center fixed-bottom">
+			<div class="col-3"></div>
+			<div class="col border">
+				<div class="row">
+					<div class="col">
+						<h3>Previous Heat</h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="bg-danger mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ph.Red}}
+						<h6 class="text-secondary">{{$ph.Red.Car.Number}}</h6>
+						<h5>{{$ph.Red.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$ph.Red.Car.Driver}}</h6>
+						<h6>{{$ph.Red.Time.Float64}}</h6>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-success mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ph.Green}}
+						<h6 class="text-secondary">{{$ph.Green.Car.Number}}</h6>
+						<h5>{{$ph.Green.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$ph.Green.Car.Driver}}</h6>
+						<h6>{{$ph.Green.Time.Float64}}</h6>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-primary mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ph.Blue}}
+						<h6 class="text-secondary">{{$ph.Blue.Car.Number}}</h6>
+						<h5>{{$ph.Blue.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$ph.Blue.Car.Driver}}</h6>
+						<h6>{{$ph.Blue.Time.Float64}}</h6>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-warning mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ph.Yellow}}
+						<h6 class="text-secondary">{{$ph.Yellow.Car.Number}}</h6>
+						<h5>{{$ph.Yellow.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$ph.Yellow.Car.Driver}}</h6>
+						<h6>{{$ph.Yellow.Time.Float64}}</h6>
+						{{end}}
+					</div>
+				</div>
+			</div>
+			<div class="col-3"></div>
 		</div>
 	</div>
 </div>
