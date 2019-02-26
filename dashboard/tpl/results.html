@@ -1,0 +1,59 @@
+{{$sid := .Season.Id}}
+{{template "head"}}
+
+<nav>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="/">Seasons</a></li>
+		<li class="breadcrumb-item active">{{.Season.Name}}</li>
+	</ol>
+</nav>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+			<h3>Season: {{.Season.Name}}</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			<ul class="nav nav-tabs">
+				{{range $k, $v := .Tabs}}
+				<li class="nav-item">
+					<a class="nav-link {{if $v.Active}}active{{end}}" href="season?id={{$sid}}&tab={{$k}}">{{$v.Name}}</a>
+				</li>
+				{{end}}
+			</ul>
+		</div>
+	</div>
+	<div class="container-fluid">
+		<h1>Results</h1>
+		<div class="row">
+			{{range .Season.ResultSets}}
+			<div class="col text-center">
+				<h2>{{.Class.Name}}</h2>
+				<table class="table table-hover table-sm table-bordered text-center mt-2">
+					<thead class="thead-light">
+						<tr>
+							<th>Place</th>
+							<th>Number</th>
+							<th>Car Name</th>
+							<th>Driver</th>
+							<th>Average Time</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{range $k, $v := .Results}}
+						<tr>
+							<td>{{$v.Place}}</td>
+							<td>{{$v.Car.Number}}</td>
+							<td>{{$v.Car.Name}}</td>
+							<td>{{$v.Car.Driver}}</td>
+							<td>{{printf "%.2f" $v.AverageTime}}</td>
+						</tr>
+						{{end}}
+					</tbody>
+				</table>
+			</div>
+			{{end}}
+		</div>
+	</div>
+</div>

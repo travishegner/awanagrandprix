@@ -24,11 +24,17 @@ type Tab struct {
 	Active bool
 }
 
+type ResultSet struct {
+	Class   *Class
+	Results []*Result
+}
+
 func NewSeasonPage(errs []string, season *Season, active string) (*SeasonPage, error) {
 	tabs := map[string]*Tab{
 		"cars":        &Tab{"Cars", false},
 		"heats":       &Tab{"Heats", false},
 		"leaderboard": &Tab{"Leaderboard", false},
+		"results":     &Tab{"Results", false},
 	}
 
 	if _, ok := tabs[active]; !ok {
@@ -135,7 +141,7 @@ func (s *Season) PreviousHeat() (*Heat, error) {
 		return heats[i-1], nil
 	}
 
-	return nil, nil
+	return heats[len(heats)-1], nil
 }
 
 func (s *Season) NextHeat() (*Heat, error) {
@@ -156,4 +162,24 @@ func (s *Season) NextHeat() (*Heat, error) {
 	}
 
 	return nil, nil
+}
+
+func (s *Season) ResultSets() ([]*ResultSet, error) {
+	classes, err := s.Classes()
+	if err != nil {
+		log.WithError(err).Error("failed to get classes")
+		return nil, err
+	}
+
+	sets := make([]*ResultSet, len(classes))
+	for i, c := range classes {
+		rs, err := c.Results()
+		if err != nil {
+			log.WithField("class", c.Name).WithError(err).Error("failed to get results from class")
+			return nil, err
+		}
+		sets[i] = &ResultSet{Class: c, Results: rs}
+	}
+
+	return sets, nil
 }

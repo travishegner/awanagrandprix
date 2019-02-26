@@ -22,11 +22,11 @@
 					{{range .Heats}}
 					<tr>
 						<td>{{.Number}}</td>
-						<td>{{if .Red}}{{if .Red.Time.Valid}}{{.Red.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
-						<td>{{if .Green}}{{if .Green.Time.Valid}}{{.Green.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
-						<td>{{if .Blue}}{{if .Blue.Time.Valid}}{{.Blue.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
-						<td>{{if .Yellow}}{{if .Yellow.Time.Valid}}{{.Yellow.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
-						<td><a class="btn {{if .Complete}}btn-secondary{{else}}btn-primary{{end}} btn-sm pv-0" href="season?id={{$s.Id}}&tab=heats&heatedit={{.Number}}">Edit</a></td>
+						<td>{{if .Red}}{{.Red.Car.Driver}}&nbsp;-&nbsp;{{if .Red.Time.Valid}}{{.Red.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+						<td>{{if .Green}}{{.Green.Car.Driver}}&nbsp;-&nbsp;{{if .Green.Time.Valid}}{{.Green.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+						<td>{{if .Blue}}{{.Blue.Car.Driver}}&nbsp;-&nbsp;{{if .Blue.Time.Valid}}{{.Blue.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+						<td>{{if .Yellow}}{{.Yellow.Car.Driver}}&nbsp;-&nbsp;{{if .Yellow.Time.Valid}}{{.Yellow.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+						<td><a class="btn {{if .Complete}}btn-secondary{{else}}btn-primary{{end}} btn-sm pv-0" href="season?id={{$s.Id}}&tab=heats&heatedit={{.Number}}">{{if .Complete}}Edit{{else}}Open{{end}}</a></td>
 					</tr>
 					{{end}}
 				</tbody>

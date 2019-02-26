@@ -115,3 +115,37 @@ func AddCar(seasonId, classId int64, number string, name string, weight float64,
 
 	return nil
 }
+
+func (c *Car) FetchResult() (float64, error) {
+	stmt, err := db.Prepare("select avg(time) from runs where car_id=:cid")
+	if err != nil {
+		log.WithError(err).Error("failed to prepare result statement")
+		return -1.0, err
+	}
+
+	var res float64
+	err = stmt.QueryRow(sql.Named("cid", c.Id)).Scan(&res)
+	if err != nil {
+		log.WithError(err).Error("failed to get result")
+		return -1.0, err
+	}
+
+	return res, nil
+}
+
+func (c *Car) FetchBestThreeResult() (float64, error) {
+	stmt, err := db.Prepare("select avg(time) from (select time from runs where car_id=:cid order by time limit 3)")
+	if err != nil {
+		log.WithError(err).Error("failed to prepare result statement")
+		return -1.0, err
+	}
+
+	var res float64
+	err = stmt.QueryRow(sql.Named("cid", c.Id)).Scan(&res)
+	if err != nil {
+		log.WithError(err).Error("failed to get result")
+		return -1.0, err
+	}
+
+	return res, nil
+}
