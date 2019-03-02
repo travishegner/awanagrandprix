@@ -141,6 +141,10 @@ func (s *Season) PreviousHeat() (*Heat, error) {
 		return heats[i-1], nil
 	}
 
+	if len(heats) == 0 {
+		return nil, nil
+	}
+
 	return heats[len(heats)-1], nil
 }
 
