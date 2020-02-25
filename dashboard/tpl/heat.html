@@ -8,19 +8,19 @@
 		{{end}}
 	</div>
 	<div class="col">
-		<div class="bg-success mb-3" style="width: 100%; height: 1.5rem"></div>
-		{{if .Green}}
-		<h4 class="text-secondary">{{.Green.Car.Number}}</h4>
-		<h3>{{.Green.Car.Name}}</h3>
-		<h4 class="text-secondary">{{.Green.Car.Driver}}</h4>
-		{{end}}
-	</div>
-	<div class="col">
 		<div class="bg-primary mb-3" style="width: 100%; height: 1.5rem"></div>
 		{{if .Blue}}
 		<h4 class="text-secondary">{{.Blue.Car.Number}}</h4>
 		<h3>{{.Blue.Car.Name}}</h3>
 		<h4 class="text-secondary">{{.Blue.Car.Driver}}</h4>
+		{{end}}
+	</div>
+	<div class="col">
+		<div class="bg-success mb-3" style="width: 100%; height: 1.5rem"></div>
+		{{if .Green}}
+		<h4 class="text-secondary">{{.Green.Car.Number}}</h4>
+		<h3>{{.Green.Car.Name}}</h3>
+		<h4 class="text-secondary">{{.Green.Car.Driver}}</h4>
 		{{end}}
 	</div>
 	<div class="col">
@@ -42,13 +42,13 @@
 		{{end}}
 	</div>
 	<div class="col">
-		{{if .Green}}
-		<input class="form-control form-control-lg" name="greentime" placeholder="Green Time" value="{{if .Green.Time.Valid}}{{.Green.Time.Float64}}{{end}}" required>
+		{{if .Blue}}
+		<input class="form-control form-control-lg" name="bluetime" placeholder="Blue Time" value="{{if .Blue.Time.Valid}}{{.Blue.Time.Float64}}{{end}}" required>
 		{{end}}
 	</div>
 	<div class="col">
-		{{if .Blue}}
-		<input class="form-control form-control-lg" name="bluetime" placeholder="Blue Time" value="{{if .Blue.Time.Valid}}{{.Blue.Time.Float64}}{{end}}" required>
+		{{if .Green}}
+		<input class="form-control form-control-lg" name="greentime" placeholder="Green Time" value="{{if .Green.Time.Valid}}{{.Green.Time.Float64}}{{end}}" required>
 		{{end}}
 	</div>
 	<div class="col">

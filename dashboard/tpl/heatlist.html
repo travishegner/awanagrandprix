@@ -12,8 +12,8 @@
 					<tr>
 						<th scope="col">#</th>
 						<th scope="col" class="bg-danger">Red</th>
-						<th scope="col" class="bg-success">Green</th>
 						<th scope="col" class="bg-primary">Blue</th>
+						<th scope="col" class="bg-success">Green</th>
 						<th scope="col" class="bg-warning">Yellow</th>
 						<th></th>
 					</tr>
@@ -23,8 +23,8 @@
 					<tr>
 						<td>{{.Number}}</td>
 						<td>{{if .Red}}{{.Red.Car.Driver}}{{if .Red.Time.Valid}}&nbsp;-&nbsp;{{.Red.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
-						<td>{{if .Green}}{{.Green.Car.Driver}}{{if .Green.Time.Valid}}&nbsp;-&nbsp;{{.Green.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
 						<td>{{if .Blue}}{{.Blue.Car.Driver}}{{if .Blue.Time.Valid}}&nbsp;-&nbsp;{{.Blue.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
+						<td>{{if .Green}}{{.Green.Car.Driver}}{{if .Green.Time.Valid}}&nbsp;-&nbsp;{{.Green.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
 						<td>{{if .Yellow}}{{.Yellow.Car.Driver}}{{if .Yellow.Time.Valid}}&nbsp;-&nbsp;{{.Yellow.Time.Float64}}{{end}}{{else}}&lt;none&gt;{{end}}</td>
 						<td><a class="btn {{if .Complete}}btn-secondary{{else}}btn-primary{{end}} btn-sm pv-0" href="season?id={{$s.Id}}&tab=heats&heatedit={{.Number}}">{{if .Complete}}Edit{{else}}Open{{end}}</a></td>
 					</tr>

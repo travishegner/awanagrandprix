@@ -257,17 +257,6 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 				h.Red.SetTime(frt)
 			}
 
-			gt := r.FormValue("greentime")
-			if gt != "" {
-				fgt, err := strconv.ParseFloat(gt, 64)
-				if err != nil {
-					log.WithError(err).Error("failed to parse green time")
-					http.Error(w, "failed to parse green time", 500)
-					return
-				}
-				h.Green.SetTime(fgt)
-			}
-
 			bt := r.FormValue("bluetime")
 			if bt != "" {
 				fbt, err := strconv.ParseFloat(bt, 64)
@@ -277,6 +266,17 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 					return
 				}
 				h.Blue.SetTime(fbt)
+			}
+
+			gt := r.FormValue("greentime")
+			if gt != "" {
+				fgt, err := strconv.ParseFloat(gt, 64)
+				if err != nil {
+					log.WithError(err).Error("failed to parse green time")
+					http.Error(w, "failed to parse green time", 500)
+					return
+				}
+				h.Green.SetTime(fgt)
 			}
 
 			yt := r.FormValue("yellowtime")

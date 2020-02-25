@@ -10,25 +10,25 @@ import (
 type Heat struct {
 	Number int64
 	Red    *Run
-	Green  *Run
 	Blue   *Run
+	Green  *Run
 	Yellow *Run
 }
 
 func (h *Heat) Complete() bool {
 	red := h.Red == nil
-	green := h.Green == nil
 	blue := h.Blue == nil
+	green := h.Green == nil
 	yellow := h.Yellow == nil
 
 	if h.Red != nil {
 		red = h.Red.Time.Valid
 	}
-	if h.Green != nil {
-		green = h.Green.Time.Valid
-	}
 	if h.Blue != nil {
 		blue = h.Blue.Time.Valid
+	}
+	if h.Green != nil {
+		green = h.Green.Time.Valid
 	}
 	if h.Yellow != nil {
 		yellow = h.Yellow.Time.Valid
@@ -52,10 +52,10 @@ func FetchHeat(seasonId, heatNumber int64) (*Heat, error) {
 		switch r.Lane.Color {
 		case "red":
 			h.Red = runs[i]
-		case "green":
-			h.Green = runs[i]
 		case "blue":
 			h.Blue = runs[i]
+		case "green":
+			h.Green = runs[i]
 		case "yellow":
 			h.Yellow = runs[i]
 		}
@@ -85,10 +85,10 @@ func FetchHeats(seasonId int64) ([]*Heat, error) {
 		switch r.Lane.Id {
 		case 1: //red
 			heatMap[n].Red = runs[i]
-		case 2: //green
-			heatMap[n].Green = runs[i]
-		case 3: //blue
+		case 2: //blue
 			heatMap[n].Blue = runs[i]
+		case 3: //green
+			heatMap[n].Green = runs[i]
 		case 4: //yellow
 			heatMap[n].Yellow = runs[i]
 		}

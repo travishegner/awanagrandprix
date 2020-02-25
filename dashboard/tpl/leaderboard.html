@@ -45,17 +45,17 @@
 						{{end}}
 					</div>
 					<div class="col">
-						<div class="bg-success mb-3" style="width: 100%; height: 1.5rem"></div>
-						{{if $ch.Green}}
-						<h3>{{$ch.Green.Car.Name}}</h3>
-						<h4 class="text-secondary">{{$ch.Green.Car.Number}}&nbsp;-&nbsp;{{$ch.Green.Car.Driver}}</h4>
-						{{end}}
-					</div>
-					<div class="col">
 						<div class="bg-primary mb-3" style="width: 100%; height: 1.5rem"></div>
 						{{if $ch.Blue}}
 						<h3>{{$ch.Blue.Car.Name}}</h3>
 						<h4 class="text-secondary">{{$ch.Blue.Car.Number}}&nbsp;-&nbsp;{{$ch.Blue.Car.Driver}}</h4>
+						{{end}}
+					</div>
+					<div class="col">
+						<div class="bg-success mb-3" style="width: 100%; height: 1.5rem"></div>
+						{{if $ch.Green}}
+						<h3>{{$ch.Green.Car.Name}}</h3>
+						<h4 class="text-secondary">{{$ch.Green.Car.Number}}&nbsp;-&nbsp;{{$ch.Green.Car.Driver}}</h4>
 						{{end}}
 					</div>
 					<div class="col">
@@ -90,20 +90,20 @@
 				</div>
 				<div class="row mb-2">
 					<div class="col">
-						<div class="bg-success" style="width: 100%; height: 1.5rem"></div>
-						{{if $nh.Green}}
-						<h5>{{$nh.Green.Car.Name}}</h5>
-						<h6 class="text-secondary">{{$nh.Green.Car.Number}}&nbsp;-&nbsp;{{$nh.Green.Car.Driver}}</h6>
+						<div class="bg-primary" style="width: 100%; height: 1.5rem"></div>
+						{{if $nh.Blue}}
+						<h5>{{$nh.Blue.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$nh.Blue.Car.Number}}&nbsp;-&nbsp;{{$nh.Blue.Car.Driver}}</h6>
 						<h6>Get Ready!</h6>
 						{{end}}
 					</div>
 				</div>
 				<div class="row mb-2">
 					<div class="col">
-						<div class="bg-primary" style="width: 100%; height: 1.5rem"></div>
-						{{if $nh.Blue}}
-						<h5>{{$nh.Blue.Car.Name}}</h5>
-						<h6 class="text-secondary">{{$nh.Blue.Car.Number}}&nbsp;-&nbsp;{{$nh.Blue.Car.Driver}}</h6>
+						<div class="bg-success" style="width: 100%; height: 1.5rem"></div>
+						{{if $nh.Green}}
+						<h5>{{$nh.Green.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$nh.Green.Car.Number}}&nbsp;-&nbsp;{{$nh.Green.Car.Driver}}</h6>
 						<h6>Get Ready!</h6>
 						{{end}}
 					</div>
@@ -140,21 +140,21 @@
 				</div>
 				<div class="row mb-2">
 					<div class="col">
-						<div class="bg-success" style="width: 100%; height: 1.5rem"></div>
-						{{if $ph.Green}}
-						<h5>{{$ph.Green.Car.Name}}</h5>
-						<h6 class="text-secondary">{{$ph.Green.Car.Number}}&nbsp;-&nbsp;{{$ph.Green.Car.Driver}}</h6>
-						<h6>{{$ph.Green.Time.Float64}}</h6>
-						{{end}}
-					</div>
-				</div>
-				<div class="row mb-2">
-					<div class="col">
 						<div class="bg-primary" style="width: 100%; height: 1.5rem"></div>
 						{{if $ph.Blue}}
 						<h5>{{$ph.Blue.Car.Name}}</h5>
 						<h6 class="text-secondary">{{$ph.Blue.Car.Number}}&nbsp;-&nbsp;{{$ph.Blue.Car.Driver}}</h6>
 						<h6>{{$ph.Blue.Time.Float64}}</h6>
+						{{end}}
+					</div>
+				</div>
+				<div class="row mb-2">
+					<div class="col">
+						<div class="bg-success" style="width: 100%; height: 1.5rem"></div>
+						{{if $ph.Green}}
+						<h5>{{$ph.Green.Car.Name}}</h5>
+						<h6 class="text-secondary">{{$ph.Green.Car.Number}}&nbsp;-&nbsp;{{$ph.Green.Car.Driver}}</h6>
+						<h6>{{$ph.Green.Time.Float64}}</h6>
 						{{end}}
 					</div>
 				</div>
