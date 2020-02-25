@@ -2,16 +2,36 @@ CREATE TABLE IF NOT EXISTS "seasons" (
 	"id"	INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"name"	TEXT NOT NULL UNIQUE
 );
+CREATE TABLE lanes (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, color TEXT UNIQUE);
+CREATE TABLE runs (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, car_id INTEGER REFERENCES cars (id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL, lane_id INTEGER REFERENCES lanes (id) ON UPDATE CASCADE, heat INTEGER, time REAL, UNIQUE (car_id, lane_id));
+CREATE INDEX idx_runs_car_id ON runs (car_id);
+CREATE INDEX idx_runs_lane_id ON runs (lane_id);
 CREATE TABLE IF NOT EXISTS "classes" (
 	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
 	"season_id"	INTEGER NOT NULL,
-	"name"	TEXT NOT NULL UNIQUE,
+	"name"	TEXT NOT NULL,
 	FOREIGN KEY("season_id") REFERENCES "seasons"("id") on update cascade on delete cascade
 );
-CREATE TABLE lanes (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, color TEXT UNIQUE);
-CREATE TABLE runs (id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, car_id INTEGER REFERENCES cars (id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL, lane_id INTEGER REFERENCES lanes (id) ON UPDATE CASCADE, heat INTEGER, time REAL, UNIQUE (car_id, lane_id));
-CREATE TABLE cars (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, class_id INTEGER NOT NULL, number TEXT NOT NULL UNIQUE CHECK (length(number) <= 3), name TEXT NOT NULL, weight REAL NOT NULL CHECK (weight <= 5.0), driver TEXT NOT NULL, FOREIGN KEY (class_id) REFERENCES classes (id) ON UPDATE CASCADE ON DELETE SET NULL);
-CREATE INDEX idx_cars_class_id ON cars (class_id);
-CREATE INDEX idx_runs_car_id ON runs (car_id);
-CREATE INDEX idx_runs_lane_id ON runs (lane_id);
-CREATE INDEX idx_classes_season_id ON classes (season_id);
+CREATE INDEX "idx_classes_season_id" ON "classes" (
+	"season_id"
+);
+CREATE UNIQUE INDEX "idx_classes_season_class" ON "classes" (
+	"name",
+	"season_id"
+);
+CREATE TABLE IF NOT EXISTS "cars" (
+	"id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+	"class_id"	INTEGER NOT NULL,
+	"number"	TEXT NOT NULL CHECK(length(number)<=3),
+	"name"	TEXT NOT NULL,
+	"weight"	REAL NOT NULL CHECK(weight<=5.0),
+	"driver"	TEXT NOT NULL,
+	FOREIGN KEY("class_id") REFERENCES "classes"("id") ON UPDATE CASCADE ON DELETE SET NULL
+);
+CREATE INDEX "idx_cars_class_id" ON "cars" (
+	"class_id"
+);
+CREATE UNIQUE INDEX "idx_cars_class_number" ON "cars" (
+	"class_id",
+	"number"
+);

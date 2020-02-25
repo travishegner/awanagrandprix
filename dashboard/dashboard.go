@@ -254,7 +254,9 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 					http.Error(w, "failed to parse red time", 500)
 					return
 				}
-				h.Red.SetTime(frt)
+				if h.Red != nil {
+					h.Red.SetTime(frt)
+				}
 			}
 
 			bt := r.FormValue("bluetime")
@@ -265,7 +267,9 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 					http.Error(w, "failed to parse blue time", 500)
 					return
 				}
-				h.Blue.SetTime(fbt)
+				if h.Blue != nil {
+					h.Blue.SetTime(fbt)
+				}
 			}
 
 			gt := r.FormValue("greentime")
@@ -276,7 +280,9 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 					http.Error(w, "failed to parse green time", 500)
 					return
 				}
-				h.Green.SetTime(fgt)
+				if h.Green != nil {
+					h.Green.SetTime(fgt)
+				}
 			}
 
 			yt := r.FormValue("yellowtime")
@@ -287,7 +293,9 @@ func (dash *Dashboard) handleSeason(w http.ResponseWriter, r *http.Request) {
 					http.Error(w, "failed to parse blue time", 500)
 					return
 				}
-				h.Yellow.SetTime(fyt)
+				if h.Yellow != nil {
+					h.Yellow.SetTime(fyt)
+				}
 			}
 
 			http.Redirect(w, r, fmt.Sprintf("season?id=%v&tab=heats&heatedit=%v", s.Id, hn+1), 301)
