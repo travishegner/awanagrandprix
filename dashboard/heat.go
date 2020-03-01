@@ -2,6 +2,7 @@ package dashboard
 
 import (
 	"database/sql"
+	"fmt"
 	"sort"
 
 	log "github.com/sirupsen/logrus"
@@ -115,6 +116,8 @@ func GenerateHeats(s *Season) error {
 		return err
 	}
 
+	fmt.Println("generate")
+
 	classes, err := s.Classes()
 	if err != nil {
 		log.WithError(err).Error("failed to get classes for season")
@@ -169,14 +172,18 @@ update runs set heat=:ht where id in ((select id from red), (select id from blue
 		return err
 	}
 
+	fmt.Println("execute")
+
 	dones := map[int]bool{}
 	for i, _ := range classes {
 		dones[i] = false
 	}
+
 	attempt := 0
 	heat := 1
 
 	for {
+		fmt.Println("loop")
 		cls := attempt % len(classes)
 
 		res, err := stmt.Exec(sql.Named("clsid", classes[cls].Id), sql.Named("ht", heat))
@@ -208,6 +215,8 @@ update runs set heat=:ht where id in ((select id from red), (select id from blue
 
 		heat += 1
 	}
+
+	fmt.Println("done")
 
 	return FixLastHeats(s.Id)
 }
