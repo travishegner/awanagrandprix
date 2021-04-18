@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"sort"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -50,7 +51,7 @@ func FetchHeat(seasonId, heatNumber int64) (*Heat, error) {
 		if !r.HeatNumber.Valid || r.HeatNumber.Int64 != heatNumber {
 			continue
 		}
-		switch r.Lane.Color {
+		switch strings.ToLower(r.Lane.Color) {
 		case "red":
 			h.Red = runs[i]
 		case "blue":
