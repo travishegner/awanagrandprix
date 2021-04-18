@@ -2,3 +2,4 @@ vendor
 awanagrandprix
 dashboard/assets.go
 agp.db
+agp.backup*
