@@ -31,10 +31,10 @@ type ResultSet struct {
 
 func NewSeasonPage(errs []string, season *Season, active string) (*SeasonPage, error) {
 	tabs := map[string]*Tab{
-		"cars":        &Tab{"Cars", false},
-		"heats":       &Tab{"Heats", false},
-		"leaderboard": &Tab{"Leaderboard", false},
-		"results":     &Tab{"Results", false},
+		"cars":        {"Cars", false},
+		"heats":       {"Heats", false},
+		"leaderboard": {"Leaderboard", false},
+		"results":     {"Results", false},
 	}
 
 	if _, ok := tabs[active]; !ok {

@@ -175,7 +175,7 @@ update runs set heat=:ht where id in ((select id from red), (select id from blue
 	fmt.Println("execute")
 
 	dones := map[int]bool{}
-	for i, _ := range classes {
+	for i := range classes {
 		dones[i] = false
 	}
 
